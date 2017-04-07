@@ -34,16 +34,16 @@ export class CognigyWebClient extends CognigyClient {
         this.initSpeechRecognigition();
     }
 
-    private voices : SpeechSynthesisVoice[];
-    public currentVoice : SpeechSynthesisVoice;
+    private voices : any[]; // actual type: SpeechSynthesisVoice
+    public currentVoice : any; // actual type: SpeechSynthesisVoice
     private recognizer : any;
     private recognizing : boolean;
     private finalTranscript : string;
     private language : string;
     private onRecEnd : (transcript : string) => void;
 
-    private initSpeechSynthesis(language : string, voiceName? : string) : SpeechSynthesisVoice {
-        let voices : SpeechSynthesisVoice[] = window.speechSynthesis.getVoices();
+    private initSpeechSynthesis(language : string, voiceName? : string) : any {
+        let voices : any[] = window.speechSynthesis.getVoices();
 
         // find desired language, otherwise just return the first one
         for(let v in voices) {

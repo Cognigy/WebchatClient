@@ -80,8 +80,8 @@ export class CognigyClient {
 
                     socket.on("exception", (data : any) => {
                         reject("Error in brain initialization");
-                    })
-                })
+                    });
+                });
             });
     }
 
@@ -119,7 +119,7 @@ export class CognigyClient {
     public disconnect() : void {
         clearInterval(this.intervalId);
 
-        if(this.mySocket)
+        if (this.mySocket)
             this.mySocket.disconnect();
     }
 
@@ -178,31 +178,33 @@ export class CognigyClient {
     }
 
     private getToken(baseUrl: string, user: string, apikey: string, token?: string) : Promise<any> {
-        if(token) return Promise.resolve(token);
-        else return fetch(baseUrl + "/loginDevice", {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            method: "POST",
-            body: JSON.stringify({
-                user: user,
-                apikey: apikey
+        if (token)
+            return Promise.resolve(token);
+        else
+            return fetch(baseUrl + "/loginDevice", {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    user: user,
+                    apikey: apikey
+                })
             })
-        })
-            .then((resBody : any) => {
-                if (resBody.status === 200) {
-                    return resBody.json();
-                } else {
-                    this.disconnect();
-                    throw new Error(resBody.statusText + ": " + resBody.status);
-                }
-            })
-            .then((response: any) => {
-                if (response.token)
-                    return Promise.resolve(response.token);
-                else
-                    return Promise.reject(new Error("Unexptected error since no token was supplied as part of the response."));
-            });
+                .then((resBody : any) => {
+                    if (resBody.status === 200) {
+                        return resBody.json();
+                    } else {
+                        this.disconnect();
+                        throw new Error(resBody.statusText + ": " + resBody.status);
+                    }
+                })
+                .then((response: any) => {
+                    if (response.token)
+                        return Promise.resolve(response.token);
+                    else
+                        return Promise.reject(new Error("Unexptected error since no token was supplied as part of the response."));
+                });
     }
 }
