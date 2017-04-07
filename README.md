@@ -1,9 +1,19 @@
 # CognigyWebClient
-A bundled version of the CognigyClient which contains everything in a single 
-file to get you started quickly. This is meant for integrations within a web browser.
+Repo for the cognigy web client which can be used to connect to the cognigy brain from
+a web browser. This repository supports the two following options:
+* install the cognigy web-client from npm and integrate it within your own build-pipeline
+e.g. using webpack, rollup and others
+* simply use the "cognigy-web-client.js" and integrate it within your web page. This file
+does already contain all dependencies, so your ready to go.
 
 ## Installation
-Just download the file **cognigy-web-client.js** and integrate it into your project.
+### Version for integrating into your own build-pipeline
+* npm i @cognigy/cognigy-web-client --save
+
+### Version for integrating in a web page
+* download the file "cognigy-web-client.js"
+* load the file onto your web-page: ```<script src="./cognigy-web-client.js"></script>```
+
 
 ## Example
 This is a minimal example of how to integrate the congigy-web-client into a web-page.

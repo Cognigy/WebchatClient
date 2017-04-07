@@ -7,8 +7,9 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "prepublish": "webpack",
-    "build": "webpack"
+    "prepublish": "tsc",
+    "build": "tsc && npm run build-webpack",
+    "build-webpack": "webpack"
   },
   "repository": {
     "type": "git",
