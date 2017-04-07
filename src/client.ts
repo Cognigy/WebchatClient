@@ -92,7 +92,12 @@ export class CognigyClient {
         if (this.isConnected())
             this.mySocket.emit("input", {
                 text : text,
-                data: data
+                data: data,
+                settings: {
+                    "flowId" : this.options.flow,
+                    "language": this.options.language,
+                    "version": this.options.version
+                }
             });
         else
             throw new Error("Error sending message - we are not connected");
