@@ -3,6 +3,10 @@ import * as fetch from "isomorphic-fetch";
 import {Options} from "./interfaces/options";
 import {Output} from "./interfaces/output";
 
+/**
+ * Class that exposes methods to easily connect to the cognigy brain-server,
+ * send events to the brain and received processed input-text.
+ */
 export class CognigyClient {
     private options: Options;
     private intervalId : any;
@@ -12,6 +16,10 @@ export class CognigyClient {
     public endSess: number;
     private firstLoad: boolean;
 
+    /**
+     * Creates an instance of the CognigyClient and initializes the auto-reconnect
+     * if configured. Auto-connects to the brain-server if auto-reconnect is configured.
+     */
     constructor(options: Options) {
         this.options = options;
         this.res = (options.res) ? options.res : null;
@@ -19,16 +27,17 @@ export class CognigyClient {
         this.endSess = 0;
         this.firstLoad = true;
 
-        if(options.reconnection === undefined)
+        if (options.reconnection === undefined)
             this.options.reconnection = true;
 
-        if(options.interval === undefined)
+        if (options.interval === undefined)
             this.options.interval = 10000;
 
-        if(this.options.reconnection) {
+        if (this.options.reconnection) {
             this.intervalId = setInterval(() => {
-                if(!this.isConnected()) {
+                if (!this.isConnected()) {
                     console.log("CognigyClient trying to reconnect");
+
                     return this.connect()
                         .then(() => {
                             console.log("reconnected");
@@ -41,6 +50,10 @@ export class CognigyClient {
         }
     }
 
+    /**
+     * Retrieves a token and then connects to the brain-server via socket.io. This method will
+     * fire the "init" event.
+     */
     public connect() : Promise<SocketIOClient.Socket> {
         let currentToken: string;
 
@@ -56,7 +69,9 @@ export class CognigyClient {
                     passthroughIP: this.options.passthroughIP,
                     resetFlow: this.firstLoad
                 });
+
                 this.firstLoad = false;
+
                 return new Promise((resolve: Function, reject: Function) => {
                     socket.on("initResponse", (data : any) => {
                         console.log("Brain connection established");
@@ -70,35 +85,48 @@ export class CognigyClient {
             });
     }
 
+    /**
+     * Sends a message to the brain-server.
+     */
     public sendMessage(text: string, data: any) : void {
-        if(this.isConnected())
+        if (this.isConnected())
             this.mySocket.emit("input", {
                 text : text,
-                data: data,
-                settings: {
-                    "flowId" : this.options.flow,
-                    "language": this.options.language,
-                    "version": this.options.version
-                }
+                data: data
             });
         else
             throw new Error("Error sending message - we are not connected");
     }
 
+    /**
+     * Directly registers event listener on the raw socket.io socket.
+     */
     public on(event: string, handler: any): void {
         this.mySocket.on(event, handler);
     }
 
+    /**
+     * Sends an arbitrary event to the brain-server using the underlying
+     * socket.io connection.
+     */
     public sendEvent(event: string, data: any): void {
         this.mySocket.emit(event, data);
     }
 
+    /**
+     * Disconnects from the brain-server and stops the auto-reconnect.
+     */
     public disconnect() : void {
         clearInterval(this.intervalId);
+
         if(this.mySocket)
             this.mySocket.disconnect();
     }
 
+    /**
+     * Checks whether the client has already established a connection to
+     * the brain-server.
+     */
     public isConnected() : boolean {
         return this.mySocket && this.mySocket.connected;
     }
@@ -171,7 +199,7 @@ export class CognigyClient {
                 }
             })
             .then((response: any) => {
-                if(response.token)
+                if (response.token)
                     return Promise.resolve(response.token);
                 else
                     return Promise.reject(new Error("Unexptected error since no token was supplied as part of the response."));

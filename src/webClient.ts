@@ -8,6 +8,11 @@ interface IWindow extends Window {
 
 const {webkitSpeechRecognition} : IWindow = <IWindow>window;
 
+/**
+ * Class that extends the cognigy clients functionalities. Allows to use the
+ * browsers build-in html5-apis to record audio and create transcripts of voice
+ * streams.
+ */
 export class CognigyWebClient extends CognigyClient {
     constructor(options : Options) {
         super(options);
@@ -42,10 +47,10 @@ export class CognigyWebClient extends CognigyClient {
 
         // find desired language, otherwise just return the first one
         for(let v in voices) {
-            if(voices[v].lang === language) {
-                if(!voiceName)
+            if (voices[v].lang === language) {
+                if (!voiceName)
                     return voices[v];
-                else if(voices[v].name.indexOf(voiceName) > -1)
+                else if (voices[v].name.indexOf(voiceName) > -1)
                     return voices[v];
             }
         }
@@ -70,7 +75,7 @@ export class CognigyWebClient extends CognigyClient {
         this.recognizer.onend = () => {
             this.recognizing = false;
 
-            if(this.onRecEnd !== null && this.onRecEnd !== undefined && typeof this.onRecEnd === "function")
+            if (this.onRecEnd !== null && this.onRecEnd !== undefined && typeof this.onRecEnd === "function")
                 this.onRecEnd(this.finalTranscript);
         };
 
@@ -88,6 +93,10 @@ export class CognigyWebClient extends CognigyClient {
         }
     }
 
+    /**
+     * Uses the browsers build-in html5-api to speak the given input
+     * string using speech synthesis.
+     */
     public say(message : string) : void {
         let vsmg = new SpeechSynthesisUtterance();
         vsmg.voice = this.currentVoice;
@@ -98,12 +107,20 @@ export class CognigyWebClient extends CognigyClient {
         window.speechSynthesis.speak(vsmg);
     }
 
+    /**
+     * Allows to register a handler method which will be called when the
+     * audio-recording finished. This can be e.g. used to send the transcript
+     * of the audo-stream to the brain-server.
+     */
     public registerOnRecEnd(onRecEnd : (transcript : string) => void) : void {
         this.onRecEnd = onRecEnd;
     }
 
+    /**
+     * Toggles the audio-recording.
+     */
     public toggleRec() : void {
-        if(this.recognizing) {
+        if (this.recognizing) {
             this.recognizer.stop();
             return;
         }
