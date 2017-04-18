@@ -54,7 +54,7 @@ export class CognigyClient {
      * Retrieves a token and then connects to the brain-server via socket.io. This method will
      * fire the "init" event.
      */
-    public connect() : Promise<SocketIOClient.Socket> {
+    public connect(): Promise<SocketIOClient.Socket> {
         let currentToken: string;
 
         return this.getToken(this.options.baseUrl, this.options.user, this.options.apikey, this.options.token)
@@ -62,12 +62,18 @@ export class CognigyClient {
                 return this.establishSocketConnection(token);
             })
             .then((socket: any) => {
+                let resetState: boolean = true;
+
+                if(this.options.resetState !== null && this.options.resetState !== undefined)
+                    resetState = this.options.resetState;
+
                 socket.emit("init", {
                     flowId: this.options.flow,
                     language: this.options.language,
                     version: this.options.version,
                     passthroughIP: this.options.passthroughIP,
-                    resetFlow: this.firstLoad
+                    resetFlow: this.firstLoad,
+                    resetState: resetState
                 });
 
                 this.firstLoad = false;
@@ -82,13 +88,40 @@ export class CognigyClient {
                         reject("Error in brain initialization");
                     });
                 });
+            })
+            .catch((error: any) => {
+                return Promise.reject("[Client] Error within the 'connect' method: " + error);
             });
+    }
+
+    /**
+     * Convenience method to send a "resetFlow" event.
+     */
+    public resetFlow(newFlowId: string, language: string, version: number): void {
+        if (this.isConnected())
+            this.mySocket.emit("resetFlow", {
+                id: newFlowId,
+                language: language,
+                version: version
+            });
+        else
+            throw new Error("Error sending resetFlow event - we are not connected");
+    }
+
+    /**
+     * Convenience method to send a "resetState" event.
+     */
+    public resetState(): void {
+        if (this.isConnected())
+            this.mySocket.emit("resetState");
+        else
+            throw new Error("Error sending resetState event - we are not connected");
     }
 
     /**
      * Sends a message to the brain-server.
      */
-    public sendMessage(text: string, data: any) : void {
+    public sendMessage(text: string, data: any): void {
         if (this.isConnected())
             this.mySocket.emit("input", {
                 text : text,
@@ -116,7 +149,7 @@ export class CognigyClient {
     /**
      * Disconnects from the brain-server and stops the auto-reconnect.
      */
-    public disconnect() : void {
+    public disconnect(): void {
         clearInterval(this.intervalId);
 
         if (this.mySocket)
@@ -127,11 +160,11 @@ export class CognigyClient {
      * Checks whether the client has already established a connection to
      * the brain-server.
      */
-    public isConnected() : boolean {
+    public isConnected(): boolean {
         return this.mySocket && this.mySocket.connected;
     }
 
-    private establishSocketConnection(token: string) : Promise<SocketIOClient.Socket> {
+    private establishSocketConnection(token: string): Promise<SocketIOClient.Socket> {
         this.mySocket = sio.connect(this.options.baseUrl, { "query": "token=" + token, "reconnection": false, "upgrade": false });
 
         this.mySocket.on("error", (error : any) => {
@@ -177,7 +210,7 @@ export class CognigyClient {
         })
     }
 
-    private getToken(baseUrl: string, user: string, apikey: string, token?: string) : Promise<any> {
+    private getToken(baseUrl: string, user: string, apikey: string, token?: string): Promise<any> {
         if (token)
             return Promise.resolve(token);
         else
