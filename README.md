@@ -32,44 +32,46 @@ Just see the html-example below.
  
         <script src="./cognigy-web-client.js"></script>
         <script>
-            const options = {
-                baseUrl: 'server-address',
-                user: 'your-username',
-                apikey: 'your-apikey',
-                flow: 'your-flow-name',
-                language: 'en-US',
-                handleOutput: function(output) {
-                    console.log("Text: " + output.text + "   Data: " + output.data);
-                    
-                    // use the clients "say" method to "speak" using html5-apis
-                    client.say(output.text);
-                }
-            };
- 
-            var client = new Cognigy.CognigyWebClient(options);
-            client.connect()
-                .then(function() {
-                    // 1) send an event directly
-                    client.sendMessage("I like pizza", undefined);
-                    
-                    // 2) send a transcript that was recorded using the voice recognition api
-                    client.registerOnRecEnd(function(transcript) {
-                        // transcript is what does get recorded and translated to text (STT)
-                        client.sendMessage(transcript, undefined);
+            window.onload = function() {
+                const options = {
+                    baseUrl: 'server-address',
+                    user: 'your-username',
+                    apikey: 'your-apikey',
+                    flow: 'your-flow-name',
+                    language: 'en-US',
+                    handleOutput: function(output) {
+                        console.log("Text: " + output.text + "   Data: " + output.data);
+
+                        // use the clients "say" method to "speak" using html5-apis
+                        client.say(output.text);
+                    }
+                };
+
+                var client = new Cognigy.CognigyWebClient(options);
+                client.connect()
+                    .then(function() {
+                        // 1) send an event directly
+                        client.sendMessage("I like pizza", undefined);
+
+                        // 2) send a transcript that was recorded using the voice recognition api
+                        client.registerOnRecEnd(function(transcript) {
+                            // transcript is what does get recorded and translated to text (STT)
+                            client.sendMessage(transcript, undefined);
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log(error);
                     });
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-             
-            // a bit js code to make our button work
-            var button = document.getElementById("button");
-            if(button !== null) {
-                button.onlick = function() {
-                    // toggles the microphone on/off. The transcript output will be send to
-                    // the onRecEnd method which you can register using "client.registerOnRecEnd"
-                    client.toggleRec();                
-                }    
+
+                // a bit js code to make our button work
+                var button = document.getElementById("button");
+                if(button !== null) {
+                    button.onlick = function() {
+                        // toggles the microphone on/off. The transcript output will be send to
+                        // the onRecEnd method which you can register using "client.registerOnRecEnd"
+                        client.toggleRec();
+                    }
+                }
             }
         </script>
     </body>
