@@ -9,6 +9,8 @@ export interface Options {
 
     channel: string;
 
+    keepMarkup?: boolean;
+
     flow: string;
     language: string;
     version?: number;
