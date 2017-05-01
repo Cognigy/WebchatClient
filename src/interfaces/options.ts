@@ -7,6 +7,8 @@ export interface Options {
     user: string;
     apikey: string;
 
+    channel: string;
+
     flow: string;
     language: string;
     version?: number;

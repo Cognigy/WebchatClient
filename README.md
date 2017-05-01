@@ -37,6 +37,7 @@ Just see the html-example below.
                     baseUrl: 'server-address',
                     user: 'your-username',
                     apikey: 'your-apikey',
+                    channel: 'my-website',
                     flow: 'your-flow-name',
                     language: 'en-US',
                     handleOutput: function(output) {
