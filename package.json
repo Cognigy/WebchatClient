@@ -1,32 +1,32 @@
 {
-  "name": "@cognigy/cognigy-web-client",
-  "version": "0.4.0",
-  "description": "The cognigy web client is a special version of the cognigy client which contains everything bundled-together so you can get started to connnect and use the cognigy brain as fast as possible.",
-  "author": "Cognigy GmbH",
-  "license": "MIT",
-  "main": "index.js",
-  "typings": "index.d.ts",
-  "scripts": {
-    "prepublish": "tsc",
-    "build": "tsc && npm run build-webpack",
-    "build-webpack": "webpack"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Cognigy/CognigyWebClient"
-  },
-  "devDependencies": {
-    "@types/es6-promise": "0.0.32",
-    "@types/isomorphic-fetch": "0.0.33",
-    "@types/socket.io-client": "^1.4.29",
-    "ts-loader": "^2.0.1",
-    "tsd": "^0.6.5",
-    "typescript": "^2.2.1",
-    "webpack": "^2.2.1"
-  },
-  "dependencies": {
-    "es6-promise": "^4.1.0",
-    "isomorphic-fetch": "^2.2.1",
-    "socket.io-client": "^1.7.3"
-  }
+    "name": "@cognigy/cognigy-web-client",
+    "version": "0.5.0",
+    "description": "The cognigy web client is a special version of the cognigy client which contains everything bundled-together so you can get started to connnect and use the cognigy brain as fast as possible.",
+    "author": "Cognigy GmbH",
+    "license": "MIT",
+    "main": "index.js",
+    "typings": "index.d.ts",
+    "scripts": {
+        "prepublish": "tsc",
+        "build": "tsc && npm run build-webpack",
+        "build-webpack": "webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Cognigy/CognigyWebClient"
+    },
+    "devDependencies": {
+        "@types/es6-promise": "0.0.32",
+        "@types/isomorphic-fetch": "0.0.33",
+        "@types/socket.io-client": "1.4.29",
+        "ts-loader": "2.0.1",
+        "tsd": "0.6.5",
+        "typescript": "2.2.1",
+        "webpack": "2.2.1"
+    },
+    "dependencies": {
+        "es6-promise": "^4.1.0",
+        "isomorphic-fetch": "^2.2.1",
+        "socket.io-client": "^1.7.3"
+    }
 }
