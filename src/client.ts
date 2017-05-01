@@ -79,7 +79,6 @@ export class CognigyClient {
                     flowId: this.options.flow,
                     language: this.options.language,
                     version: this.options.version,
-                    channel: this.options.channel,
                     passthroughIP: this.options.passthroughIP,
                     resetFlow: this.firstLoad,
                     resetState: resetState,
