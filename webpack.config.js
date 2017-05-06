@@ -23,6 +23,8 @@ module.exports = {
         extensions: [".ts", ".js"]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin([])
+        new webpack.ProvidePlugin({
+          Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise'
+     })
     ]
 };

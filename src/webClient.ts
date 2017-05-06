@@ -14,6 +14,15 @@ const { webkitSpeechRecognition }: IWindow = <IWindow>window;
  * streams.
  */
 export class CognigyWebClient extends CognigyClient {
+	private voices: any[]; // actual type: SpeechSynthesisVoice
+	public currentVoice: any; // actual type: SpeechSynthesisVoice
+	private recognizer: any;
+	private recognizing: boolean;
+	private finalTranscript: string;
+	private language: string;
+	private onRecEnd: (transcript: string) => void;
+	private onInterim: (transcript: string) => void;
+	
 	constructor(options: Options) {
 		super(options);
 
@@ -24,6 +33,7 @@ export class CognigyWebClient extends CognigyClient {
 		this.finalTranscript = "";
 		this.language = options.language;
 		this.onRecEnd = null;
+		this.onInterim = null;
 
 		// register for the "onvoiceschanged" event since speech synthesis
 		// voices will get loaded async.
@@ -33,14 +43,6 @@ export class CognigyWebClient extends CognigyClient {
 
 		this.initSpeechRecognigition();
 	}
-
-	private voices: any[]; // actual type: SpeechSynthesisVoice
-	public currentVoice: any; // actual type: SpeechSynthesisVoice
-	private recognizer: any;
-	private recognizing: boolean;
-	private finalTranscript: string;
-	private language: string;
-	private onRecEnd: (transcript: string) => void;
 
 	private initSpeechSynthesis(language: string, voiceName?: string): any {
 		let voices: any[] = window.speechSynthesis.getVoices();
@@ -74,6 +76,7 @@ export class CognigyWebClient extends CognigyClient {
 
 		this.recognizer.onend = () => {
 			this.recognizing = false;
+			this.recognizer.stop();
 
 			if (this.onRecEnd !== null && this.onRecEnd !== undefined && typeof this.onRecEnd === "function")
 				this.onRecEnd(this.finalTranscript);
@@ -83,7 +86,10 @@ export class CognigyWebClient extends CognigyClient {
 			let firstChar: RegExp = /\S/;
 
 			for (let i = event.resultIndex; i < event.results.length; ++i) {
-				if (event.results[i].isFinal) {
+				if (this.onInterim !== null && this.onInterim !== undefined && typeof this.onInterim === "function")
+					this.onInterim(event.results[i][0].transcript);
+
+				if (event.results[i].isFinal) {	
 					this.finalTranscript += event.results[i][0].transcript;
 					this.finalTranscript = this.finalTranscript.replace(firstChar, (m) => {
 						return m.toUpperCase();
@@ -114,6 +120,14 @@ export class CognigyWebClient extends CognigyClient {
 	 */
 	public registerOnRecEnd(onRecEnd: (transcript: string) => void): void {
 		this.onRecEnd = onRecEnd;
+	}
+
+	/**
+	 * Allows to register a handler method which will be called when the
+	 * audio-recording sends an interim result. 
+	 */
+	public registerOnInterim(onInterim: (transcript: string) => void): void {
+		this.onInterim = onInterim;
 	}
 
 	/**
