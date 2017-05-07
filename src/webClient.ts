@@ -35,10 +35,12 @@ export class CognigyWebClient extends CognigyClient {
 		this.onRecEnd = null;
 		this.onInterim = null;
 
+		this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
+
 		// register for the "onvoiceschanged" event since speech synthesis
 		// voices will get loaded async.
 		window.speechSynthesis.onvoiceschanged = () => {
-			this.currentVoice = this.initSpeechSynthesis(options.language);
+			this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
 		};
 
 		this.initSpeechRecognigition();
