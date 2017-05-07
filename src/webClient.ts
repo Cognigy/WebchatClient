@@ -110,8 +110,8 @@ export class CognigyWebClient extends CognigyClient {
 		let vsmg = new SpeechSynthesisUtterance();
 		vsmg.voice = this.currentVoice;
 		vsmg.text = message;
-		vsmg.pitch = 1;
-		vsmg.rate = 1;
+		vsmg.pitch = (this.options.voicePitch) ? this.options.voicePitch : 1;
+		vsmg.rate = (this.options.voiceRate) ? this.options.voiceRate : 1;;
 
 		window.speechSynthesis.speak(vsmg);
 	}

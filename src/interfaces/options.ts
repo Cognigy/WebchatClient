@@ -35,5 +35,7 @@ export interface Options {
 	passthroughIP?: string;
 	token?: string;
 
-	voiceName?: string
+	voiceName?: string;
+	voiceRate?: number;
+	voicePitch?: number;
 };
