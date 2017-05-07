@@ -84,10 +84,9 @@ export class CognigyWebClient extends CognigyClient {
 
 		this.recognizer.onresult = (event: any) => {
 			let firstChar: RegExp = /\S/;
-
+			let transcript = "";
 			for (let i = event.resultIndex; i < event.results.length; ++i) {
-				if (this.onInterim !== null && this.onInterim !== undefined && typeof this.onInterim === "function")
-					this.onInterim(event.results[i][0].transcript);
+				transcript += event.results[i][0].transcript;
 
 				if (event.results[i].isFinal) {	
 					this.finalTranscript += event.results[i][0].transcript;
@@ -96,6 +95,8 @@ export class CognigyWebClient extends CognigyClient {
 					});
 				}
 			}
+			if (this.onInterim !== null && this.onInterim !== undefined && typeof this.onInterim === "function")
+				this.onInterim(transcript);
 		}
 	}
 
