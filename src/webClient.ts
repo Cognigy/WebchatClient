@@ -136,14 +136,14 @@ export class CognigyWebClient extends CognigyClient {
 	/**
 	 * Toggles the audio-recording.
 	 */
-	public toggleRec(): void {
+	public toggleRec(lang?: string): void {
 		if (this.recognizing) {
 			this.recognizer.stop();
 			return;
 		}
 
 		this.finalTranscript = "";
-		this.recognizer.lang = this.language;
+		this.recognizer.lang = (lang) ? lang : this.language;
 		this.recognizer.start();
 	}
 }
