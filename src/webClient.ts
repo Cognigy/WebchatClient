@@ -135,6 +135,8 @@ export class CognigyWebClient extends CognigyClient {
 
 	/**
 	 * Toggles the audio-recording.
+	 * 
+	 * @param lang Optional language parameter
 	 */
 	public toggleRec(lang?: string): void {
 		if (this.recognizing) {
