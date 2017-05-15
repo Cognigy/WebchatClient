@@ -67,7 +67,7 @@ Just see the html-example below.
                 // a bit js code to make our button work
                 var button = document.getElementById("button");
                 if(button !== null) {
-                    button.onlick = function() {
+                    button.onclick = function() {
                         // toggles the microphone on/off. The transcript output will be send to
                         // the onRecEnd method which you can register using "client.registerOnRecEnd"
                         client.toggleRec();
