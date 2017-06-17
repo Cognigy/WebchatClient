@@ -1,6 +1,6 @@
 {
     "name": "@cognigy/cognigy-web-client",
-    "version": "0.9",
+    "version": "0.9.0",
     "description": "The Cognigy web client is a special version of the Cognigy client which contains everything bundled-together so you can get started to connnect and use the Cognigy brain as fast as possible.",
     "author": "Cognigy GmbH",
     "license": "MIT",
