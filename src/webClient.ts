@@ -3,10 +3,11 @@ import { Options } from "./interfaces/options";
 
 // define the webkitSpeechRecognition as any to make typescript happy
 interface IWindow extends Window {
-	webkitSpeechRecognition: any
+	webkitSpeechRecognition: any,
+	SpeechRecognition: any
 }
 
-const { webkitSpeechRecognition }: IWindow = <IWindow>window;
+const { webkitSpeechRecognition, SpeechRecognition }: IWindow = <IWindow>window;
 
 /**
  * Class that extends the cognigy clients functionalities. Allows to use the
@@ -64,7 +65,10 @@ export class CognigyWebClient extends CognigyClient {
 	}
 
 	private initSpeechRecognigition(): void {
-		this.recognizer = new webkitSpeechRecognition();
+		// initialise either SpechRecognition or webkitSpeechRecognition
+		
+		this.recognizer = (SpeechRecognition) ? new SpeechRecognition() : new webkitSpeechRecognition();
+
 		this.recognizer.continuous = true;
 		this.recognizer.interimResults = true;
 
@@ -85,6 +89,7 @@ export class CognigyWebClient extends CognigyClient {
 		};
 
 		this.recognizer.onresult = (event: any) => {
+			console.log(event);
 			let firstChar: RegExp = /\S/;
 			let transcript = "";
 			for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -140,10 +145,12 @@ export class CognigyWebClient extends CognigyClient {
 	 */
 	public toggleRec(lang?: string): void {
 		if (this.recognizing) {
+			console.log("stop");
 			this.recognizer.stop();
 			return;
 		}
 
+		console.log("start");
 		this.finalTranscript = "";
 		this.recognizer.lang = (lang) ? lang : this.language;
 		this.recognizer.start();

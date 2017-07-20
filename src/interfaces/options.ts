@@ -1,6 +1,6 @@
-import { CognigyError } from "./cognigyError";
-import { Output } from "./output";
-import { IFinalPing } from "./finalPing";
+import {CognigyError} from "./cognigyError";
+import {Output} from "./output";
+import {IFinalPing} from "./finalPing";
 
 export interface Options {
 	baseUrl: string;
@@ -17,6 +17,7 @@ export interface Options {
 
 	reconnection?: boolean;
 	interval?: number;
+	expiresIn?: number;
 
 	resetState?: boolean;
 	resetContext?: boolean;
@@ -28,7 +29,7 @@ export interface Options {
 	handleLogstep?: (data: any) => void;
 	handleLogstepError?: (data: any) => void;
 	handleLogflow?: (data: any) => void;
-
+	
 	handlePing?: (finalPing: IFinalPing) => void
 
 	res?: any;
