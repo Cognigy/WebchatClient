@@ -390,7 +390,7 @@ export class CognigyClient {
 
 		this.mySocket.on("output", (output: Output) => {
 			if (!this.options.keepMarkup) {
-			    output.text = (output && output.text && typeof output.text === "string") ? output.text.replace(/<[^>]*>/g, "") : output.text;
+				output.text = (output && output.text && typeof output.text === "string") ? output.text.replace(/<[^>]*>/g, "") : output.text;
 			}
 
 			this.options.handleOutput ? this.options.handleOutput(output) : console.log("Text: " + output.text + " Data: " + output.data);
