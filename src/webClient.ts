@@ -67,8 +67,14 @@ export class CognigyWebClient extends CognigyClient {
 	private initSpeechRecognigition(): void {
 		// initialise either SpechRecognition or webkitSpeechRecognition
 		
-		this.recognizer = (SpeechRecognition) ? new SpeechRecognition() : new webkitSpeechRecognition();
-
+		if (SpeechRecognition) {
+			this.recognizer = new SpeechRecognition();
+		} else if (webkitSpeechRecognition) {
+			this.recognizer = new webkitSpeechRecognition();
+		} else {
+			return;
+		}
+		
 		this.recognizer.continuous = true;
 		this.recognizer.interimResults = true;
 
