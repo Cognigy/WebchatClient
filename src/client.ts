@@ -252,8 +252,8 @@ export class CognigyClient {
 			/* Send the processInput event to the endpoint */
 			this.mySocket.emit("processInput", {
 				URLToken: this.options.URLToken,
-				userId: this.options.user,
-				sessionId: this.options.session,
+				userId: this.options.userId,
+				sessionId: this.options.sessionId,
 				source: "device",
 				passthroughIP: this.options.passthroughIP,
 				reloadFlow: !!this.options.reloadFlow,

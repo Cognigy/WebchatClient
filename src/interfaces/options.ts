@@ -4,8 +4,8 @@ import { IFinalPing } from "./finalPing";
 
 export interface Options {
 	baseUrl: string;
-	user: string;
-	session: string;
+	userId: string;
+	sessionId: string;
 	URLToken: string;
 
 	channel: string;
