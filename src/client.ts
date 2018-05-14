@@ -355,7 +355,7 @@ export class CognigyClient {
 	}
 
 	private establishSocketConnection(): Promise<SocketIOClient.Socket> {
-		this.mySocket = sio.connect(this.options.baseUrl, { "reconnection": false, "upgrade": false });
+		this.mySocket = sio.connect(this.options.baseUrl, { "reconnection": false, "upgrade": true });
 
 		this.mySocket.on("error", (error: any) => {
 			this.options.handleError ? this.options.handleError(error) : console.log(error);
