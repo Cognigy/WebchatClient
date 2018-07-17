@@ -27,6 +27,11 @@ export class CognigyWebClient extends CognigyClient {
 	
 	constructor(options: Options, speechOptions: SpeechOptions) {
 		super(options);
+
+		if (!window.speechSynthesis || !speechOptions) {
+			return;
+		};
+
 		this.speechOptions = speechOptions;
 
 		this.voices = [];
@@ -37,6 +42,7 @@ export class CognigyWebClient extends CognigyClient {
 		this.language = speechOptions.language;
 		this.onRecEnd = null;
 		this.onInterim = null;
+
 
 		this.currentVoice = this.initSpeechSynthesis(speechOptions.language, speechOptions.voiceName);
 
@@ -50,6 +56,11 @@ export class CognigyWebClient extends CognigyClient {
 	}
 
 	private initSpeechSynthesis(language: string, voiceName?: string): any {
+
+		if (!window.speechSynthesis) {
+			return;
+		};
+
 		let voices: any[] = window.speechSynthesis.getVoices();
 
 		// find desired language, otherwise just return the first one
@@ -120,6 +131,10 @@ export class CognigyWebClient extends CognigyClient {
 	 * string using speech synthesis.
 	 */
 	public say(message: string): void {
+		if (!window.speechSynthesis) {
+			return;
+		};
+
 		let vsmg = new SpeechSynthesisUtterance();
 		vsmg.voice = this.currentVoice;
 		vsmg.text = message;
@@ -152,6 +167,11 @@ export class CognigyWebClient extends CognigyClient {
 	 * @param lang Optional language parameter
 	 */
 	public toggleRec(lang?: string): void {
+		
+		if (!SpeechRecognition && !webkitSpeechRecognition) {
+			return;
+		}
+
 		if (this.recognizing) {
 			console.log("stop");
 			this.recognizer.stop();
