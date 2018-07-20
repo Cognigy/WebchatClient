@@ -1,4 +1,6 @@
-export interface SpeechOptions {
+import { Options } from "../cognigyClient";
+
+export interface ISpeechOptions extends Options {
     language: string;
 
     voiceName?: string;

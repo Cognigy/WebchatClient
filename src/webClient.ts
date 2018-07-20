@@ -1,5 +1,5 @@
 import { CognigyClient, Options } from "./cognigyClient/index";
-import { SpeechOptions } from "./interfaces/speechOptions";
+import { ISpeechOptions } from "./interfaces/speechOptions";
 
 // define the webkitSpeechRecognition as any to make typescript happy
 interface IWindow extends Window {
@@ -15,7 +15,6 @@ const { webkitSpeechRecognition, SpeechRecognition }: IWindow = <IWindow>window;
  * streams.
  */
 export class CognigyWebClient extends CognigyClient {
-	private speechOptions: SpeechOptions;
 	private voices: any[]; // actual type: SpeechSynthesisVoice
 	public currentVoice: any; // actual type: SpeechSynthesisVoice
 	private recognizer: any;
@@ -24,26 +23,26 @@ export class CognigyWebClient extends CognigyClient {
 	private language: string;
 	private onRecEnd: (transcript: string) => void;
 	private onInterim: (transcript: string) => void;
+	public options: ISpeechOptions;
 	
-	constructor(options: Options, speechOptions: SpeechOptions) {
+	constructor(options: ISpeechOptions) {
 		super(options);
-		this.speechOptions = speechOptions;
 
 		this.voices = [];
 		this.currentVoice = null;
 		this.recognizer = null;
 		this.recognizing = false;
 		this.finalTranscript = "";
-		this.language = speechOptions.language;
+		this.language = options.language;
 		this.onRecEnd = null;
 		this.onInterim = null;
 
-		this.currentVoice = this.initSpeechSynthesis(speechOptions.language, speechOptions.voiceName);
+		this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
 
 		// register for the "onvoiceschanged" event since speech synthesis
 		// voices will get loaded async.
 		window.speechSynthesis.onvoiceschanged = () => {
-			this.currentVoice = this.initSpeechSynthesis(speechOptions.language, speechOptions.voiceName);
+			this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
 		};
 
 		this.initSpeechRecognigition();
@@ -123,8 +122,8 @@ export class CognigyWebClient extends CognigyClient {
 		let vsmg = new SpeechSynthesisUtterance();
 		vsmg.voice = this.currentVoice;
 		vsmg.text = message;
-		vsmg.pitch = (this.speechOptions.voicePitch) ? this.speechOptions.voicePitch : 1;
-		vsmg.rate = (this.speechOptions.voiceRate) ? this.speechOptions.voiceRate : 1;;
+		vsmg.pitch = (this.options.voicePitch) ? this.options.voicePitch : 1;
+		vsmg.rate = (this.options.voiceRate) ? this.options.voiceRate : 1;;
 
 		window.speechSynthesis.speak(vsmg);
 	}
