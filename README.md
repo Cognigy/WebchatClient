@@ -14,8 +14,8 @@ npm i @cognigy/cognigy-web-client --save
 ```
 
 ### Version for integrating in a web page
-* download the file "cognigy-web-client.js"
-* load the file onto your web-page: ```<script src="./cognigy-web-client.js"></script>```
+* Download the ``cognigy-web-client.js`` within the ``/static`` folde
+* Add this javascript file to your webpage and load it: ``<script src="./cognigy-web-client.js"></script>``
 
 
 ## Example
