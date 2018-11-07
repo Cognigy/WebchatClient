@@ -1,6 +1,7 @@
 # CognigyWebClient
-Repo for the cognigy web client which can be used to connect to the cognigy brain from
-a web browser. This repository supports the two following options:
+Repo for the cognigy web client which can be used to connect to the Cognigy.AI platform from a web browser.
+
+This repository supports the two following options:
 * install the cognigy web-client from npm and integrate it within your own build-pipeline
 e.g. using webpack, rollup and others
 * simply use the "cognigy-web-client.js" and integrate it within your web page. This file
@@ -8,7 +9,9 @@ does already contain all dependencies, so your ready to go.
 
 ## Installation
 ### Version for integrating into your own build-pipeline
-* npm i @cognigy/cognigy-web-client --save
+```
+npm i @cognigy/cognigy-web-client --save
+```
 
 ### Version for integrating in a web page
 * download the file "cognigy-web-client.js"
@@ -40,12 +43,13 @@ Just see the html-example below.
                     userId: 'your-username',
                     sessionId: 'unique-session-Id',
                     channel: 'my-website',
+                    forceWebsockets: false,
                     handleOutput: function(output) {
                         console.log("Text: " + output.text + "   Data: " + output.data);
 
-                        // use the clients "say" method to "speak" using html5-apis
+                        /** use the clients voice synthesis api to 'speak' */
                         client.say(output.text);
-                    }
+                    },
 
                     /** Optional fields */
                     keepMarkup: true,
@@ -53,9 +57,9 @@ Just see the html-example below.
                     interval: 1000,
                     expiresIn: 5000,
                     passthroughIp: "127.0.0.1",
-                    handleError: (error: CognigyError) => { console.log(error); },
-                    handleException: (error: CognigyError) => { console.log(error); },
-                    handlePing: (finalPing: IFinalPing) => { console.log("On final ping"); }
+                    handleError: (error) => { console.log(error); },
+                    handleException: (error) => { console.log(error); },
+                    handlePing: (finalPing) => { console.log("On final ping"); }
                 };
 
                 const speechOptions = {
@@ -68,15 +72,14 @@ Just see the html-example below.
                     voicePitch: 20,
                 }
 
-                var client = new Cognigy.CognigyWebClient(options);
+                const client = new Cognigy.CognigyWebClient(options);
                 client.connect()
                     .then(function() {
-                        // 1) send an event directly
+                        /** Send the event directly */
                         client.sendMessage("I like pizza", undefined);
 
-                        // 2) send a transcript that was recorded using the voice recognition api
+                        /** Send a transcript that was recorded using the voice recognition api from your browser */
                         client.registerOnRecEnd(function(transcript) {
-                            // transcript is what does get recorded and translated to text (STT)
                             client.sendMessage(transcript, undefined);
                         });
                     })
@@ -84,12 +87,11 @@ Just see the html-example below.
                         console.log(error);
                     });
 
-                // a bit js code to make our button work
-                var button = document.getElementById("button");
+                /** a bit js code to make our button work */
+                const button = document.getElementById("button");
                 if(button !== null) {
                     button.onclick = function() {
-                        // toggles the microphone on/off. The transcript output will be send to
-                        // the onRecEnd method which you can register using "client.registerOnRecEnd"
+                        /** toggles the microphone on/off. The transcript output will be send to the onRecEnd method which you can register using 'client.registerOnRecEnd' */
                         client.toggleRec();
                     }
                 }
