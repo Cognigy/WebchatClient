@@ -1,5 +1,5 @@
-import { CognigyClient } from "./client";
-import { Options } from "./interfaces/options";
+import { CognigyClient, Options } from "./cognigyClient/index";
+import { ISpeechOptions } from "./interfaces/speechOptions";
 
 // define the webkitSpeechRecognition as any to make typescript happy
 interface IWindow extends Window {
@@ -23,8 +23,9 @@ export class CognigyWebClient extends CognigyClient {
 	private language: string;
 	private onRecEnd: (transcript: string) => void;
 	private onInterim: (transcript: string) => void;
+	public options: ISpeechOptions;
 	
-	constructor(options: Options) {
+	constructor(options: ISpeechOptions) {
 		super(options);
 
 		this.voices = [];

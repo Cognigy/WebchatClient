@@ -28,25 +28,45 @@ Just see the html-example below.
     </head>
     <body>
         <h1>See your dev-console for the magic that happens.</h1>
-        <button id=="button">Toggle Record</button>
+        <button id="button">Toggle Record</button>
  
         <script src="./cognigy-web-client.js"></script>
         <script>
             window.onload = function() {
                 const options = {
+                    /** Required fields */
                     baseUrl: 'server-address',
-                    user: 'your-username',
-                    apikey: 'your-apikey',
+                    URLToken: 'endoint-url-token',
+                    userId: 'your-username',
+                    sessionId: 'unique-session-Id',
                     channel: 'my-website',
-                    flow: 'your-flow-name',
-                    language: 'en-US',
                     handleOutput: function(output) {
                         console.log("Text: " + output.text + "   Data: " + output.data);
 
                         // use the clients "say" method to "speak" using html5-apis
                         client.say(output.text);
                     }
+
+                    /** Optional fields */
+                    keepMarkup: true,
+                    reconnection: true,
+                    interval: 1000,
+                    expiresIn: 5000,
+                    passthroughIp: "127.0.0.1",
+                    handleError: (error: CognigyError) => { console.log(error); },
+                    handleException: (error: CognigyError) => { console.log(error); },
+                    handlePing: (finalPing: IFinalPing) => { console.log("On final ping"); }
                 };
+
+                const speechOptions = {
+                    /** Required fields */
+                    language: 'en-US',
+                    
+                    /** Optional fields */
+                    voiceName: "voice-name",
+                    voiceRate: 20,
+                    voicePitch: 20,
+                }
 
                 var client = new Cognigy.CognigyWebClient(options);
                 client.connect()

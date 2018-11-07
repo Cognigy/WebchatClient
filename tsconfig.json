@@ -4,7 +4,8 @@
         "target": "es5",
         "declaration": true,
         "inlineSourceMap": true,
-        "outDir": "."
+        "rootDir":".",
+        "outDir": "build"
     },
     "files": [
         "./index.ts"

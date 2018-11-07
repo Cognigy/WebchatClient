@@ -5,7 +5,7 @@ module.exports = {
     devtool : "source-map",
     entry : ["./src/webClient.ts"],
     output: {
-        filename: "cognigy-web-client.js",
+        filename: "./build/cognigy-web-client.js",
 
         libraryTarget: "var",
         library: "Cognigy"

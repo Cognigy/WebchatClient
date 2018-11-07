@@ -1,5 +1,6 @@
 # ignore project files
 .idea/
+build/
 
 # ignore npm files
 node_modules/
@@ -15,3 +16,4 @@ Thumbs.db
 *.d.ts
 !webpack.config.js
 !cognigy-web-client.js
+
