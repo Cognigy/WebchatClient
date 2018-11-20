@@ -1,9 +1,9 @@
 import { Options } from "../cognigyClient";
 
 export interface ISpeechOptions extends Options {
-    language: string;
+	language: string;
 
-    voiceName?: string;
-    voiceRate?: number;
-    voicePitch?: number;
+	voiceName?: string;
+	voiceRate?: number;
+	voicePitch?: number;
 }
