@@ -24,7 +24,7 @@ export class CognigyWebClient extends CognigyClient {
 	private onRecEnd: (transcript: string) => void;
 	private onInterim: (transcript: string) => void;
 	public options: ISpeechOptions;
-	
+
 	constructor(options: ISpeechOptions) {
 		super(options);
 
@@ -37,28 +37,27 @@ export class CognigyWebClient extends CognigyClient {
 		this.onRecEnd = null;
 		this.onInterim = null;
 
-		this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
-
-		// register for the "onvoiceschanged" event since speech synthesis
-		// voices will get loaded async.
-		window.speechSynthesis.onvoiceschanged = () => {
-			this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
-		};
-
-		this.initSpeechRecognigition();
-	}
-
-	private initSpeechSynthesis(language: string, voiceName?: string): any {
 		/**
 		 * Certain older browsers do not support the SpeechSynthesis API
 		 * since this is part of the html5-spec. Check whether the API is
 		 * available before we try to use it.
 		 */
-		if (!window.speechSynthesis) {
+		if (window.speechSynthesis) {
+			this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
+
+			// register for the "onvoiceschanged" event since speech synthesis
+			// voices will get loaded async.
+			window.speechSynthesis.onvoiceschanged = () => {
+				this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
+			};
+		} else {
 			console.log("This browser does not support speech synthesis!");
-			return;
 		}
 
+		this.initSpeechRecognigition();
+	}
+
+	private initSpeechSynthesis(language: string, voiceName?: string): any {
 		const voices = window.speechSynthesis.getVoices();
 
 		// find desired language, otherwise just return the first one
@@ -85,9 +84,10 @@ export class CognigyWebClient extends CognigyClient {
 		} else if (webkitSpeechRecognition) {
 			this.recognizer = new webkitSpeechRecognition();
 		} else {
+			console.log("This browser does not support speech recognition!");
 			return;
 		}
-		
+
 		this.recognizer.continuous = true;
 		this.recognizer.interimResults = true;
 
