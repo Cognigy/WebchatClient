@@ -15,8 +15,8 @@ const { webkitSpeechRecognition, SpeechRecognition }: IWindow = <IWindow>window;
  * streams.
  */
 export class CognigyWebClient extends CognigyClient {
-	private voices: any[]; // actual type: SpeechSynthesisVoice
-	public currentVoice: any; // actual type: SpeechSynthesisVoice
+	private voices: SpeechSynthesisVoice[];
+	public currentVoice: SpeechSynthesisVoice;
 	private recognizer: any;
 	private recognizing: boolean;
 	private finalTranscript: string;
@@ -24,7 +24,7 @@ export class CognigyWebClient extends CognigyClient {
 	private onRecEnd: (transcript: string) => void;
 	private onInterim: (transcript: string) => void;
 	public options: ISpeechOptions;
-	
+
 	constructor(options: ISpeechOptions) {
 		super(options);
 
@@ -37,27 +37,36 @@ export class CognigyWebClient extends CognigyClient {
 		this.onRecEnd = null;
 		this.onInterim = null;
 
-		this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
-
-		// register for the "onvoiceschanged" event since speech synthesis
-		// voices will get loaded async.
-		window.speechSynthesis.onvoiceschanged = () => {
+		/**
+		 * Certain older browsers do not support the SpeechSynthesis API
+		 * since this is part of the html5-spec. Check whether the API is
+		 * available before we try to use it.
+		 */
+		if (window.speechSynthesis) {
 			this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
-		};
+
+			// register for the "onvoiceschanged" event since speech synthesis
+			// voices will get loaded async.
+			window.speechSynthesis.onvoiceschanged = () => {
+				this.currentVoice = this.initSpeechSynthesis(options.language, options.voiceName);
+			};
+		} else {
+			console.log("This browser does not support speech synthesis!");
+		}
 
 		this.initSpeechRecognigition();
 	}
 
 	private initSpeechSynthesis(language: string, voiceName?: string): any {
-		let voices: any[] = window.speechSynthesis.getVoices();
+		const voices = window.speechSynthesis.getVoices();
 
 		// find desired language, otherwise just return the first one
-		for (let v in voices) {
-			if (voices[v].lang === language) {
+		for (const voice in voices) {
+			if (voices[voice].lang === language) {
 				if (!voiceName)
-					return voices[v];
-				else if (voices[v].name.indexOf(voiceName) > -1)
-					return voices[v];
+					return voices[voice];
+				else if (voices[voice].name.indexOf(voiceName) > -1)
+					return voices[voice];
 			}
 		}
 
@@ -66,16 +75,19 @@ export class CognigyWebClient extends CognigyClient {
 	}
 
 	private initSpeechRecognigition(): void {
-		// initialise either SpechRecognition or webkitSpeechRecognition
-		
+		/**
+		 * Speech recognition is vendor specific and still has some prefixes
+		 * for different browsers. Older browsers do not support it.
+		 */
 		if (SpeechRecognition) {
 			this.recognizer = new SpeechRecognition();
 		} else if (webkitSpeechRecognition) {
 			this.recognizer = new webkitSpeechRecognition();
 		} else {
+			console.log("This browser does not support speech recognition!");
 			return;
 		}
-		
+
 		this.recognizer.continuous = true;
 		this.recognizer.interimResults = true;
 
@@ -84,7 +96,7 @@ export class CognigyWebClient extends CognigyClient {
 		};
 
 		this.recognizer.onerror = (event: any) => {
-			console.error("error: ", event);
+			console.error("Error during speech recognition:", event);
 		};
 
 		this.recognizer.onend = () => {
@@ -96,19 +108,20 @@ export class CognigyWebClient extends CognigyClient {
 		};
 
 		this.recognizer.onresult = (event: any) => {
-			console.log(event);
-			let firstChar: RegExp = /\S/;
+			let firstChar = /\S/;
 			let transcript = "";
+
 			for (let i = event.resultIndex; i < event.results.length; ++i) {
 				transcript += event.results[i][0].transcript;
 
-				if (event.results[i].isFinal) {	
+				if (event.results[i].isFinal) {
 					this.finalTranscript += event.results[i][0].transcript;
 					this.finalTranscript = this.finalTranscript.replace(firstChar, (m) => {
 						return m.toUpperCase();
 					});
 				}
 			}
+
 			if (this.onInterim !== null && this.onInterim !== undefined && typeof this.onInterim === "function")
 				this.onInterim(transcript);
 		}
@@ -116,10 +129,16 @@ export class CognigyWebClient extends CognigyClient {
 
 	/**
 	 * Uses the browsers build-in html5-api to speak the given input
-	 * string using speech synthesis.
+	 * string using speech synthesis. Some browsers do not support that.
+	 * This method will not do anything on these older browsers.
 	 */
 	public say(message: string): void {
-		let vsmg = new SpeechSynthesisUtterance();
+		if (!SpeechSynthesisUtterance) {
+			console.log("This browser does not support the speech synthesis utterance api and can therefore not 'speak'.");
+			return;
+		}
+
+		const vsmg = new SpeechSynthesisUtterance();
 		vsmg.voice = this.currentVoice;
 		vsmg.text = message;
 		vsmg.pitch = (this.options.voicePitch) ? this.options.voicePitch : 1;
@@ -151,13 +170,20 @@ export class CognigyWebClient extends CognigyClient {
 	 * @param lang Optional language parameter
 	 */
 	public toggleRec(lang?: string): void {
+		/**
+		 * Some browsers can not use the recognizer and therefore this
+		 * method will not do anything.
+		 */
+		if (!SpeechRecognition && !webkitSpeechRecognition) {
+			console.log("This browser does not support the speech recognition API.");
+			return;
+		}
+
 		if (this.recognizing) {
-			console.log("stop");
 			this.recognizer.stop();
 			return;
 		}
 
-		console.log("start");
 		this.finalTranscript = "";
 		this.recognizer.lang = (lang) ? lang : this.language;
 		this.recognizer.start();
