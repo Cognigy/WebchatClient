@@ -1,13 +1,16 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
-        "declaration": true,
-        "inlineSourceMap": true,
-        "rootDir":".",
-        "outDir": "build"
+      "module": "commonjs",
+      "declaration": true,
+      "target": "es6",
+      "outDir": "lib",
+      "lib": [
+        "es6"
+      ]
     },
-    "files": [
-        "./index.ts"
+    "exclude": [
+      "node_modules",
+      "lib"
     ]
-}
+   }
+   

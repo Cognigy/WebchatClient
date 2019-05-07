@@ -1,9 +1,9 @@
 # ignore project files
 .idea/
-build/
 
 # ignore npm files
 node_modules/
+lib/
 npm-debug.log*
 
 # os generated files
@@ -14,6 +14,3 @@ Thumbs.db
 *.js
 *.js.map
 *.d.ts
-!webpack.config.js
-!cognigy-web-client.js
-

@@ -1,3 +1,0 @@
-[submodule "src/cognigyClient"]
-	path = src/cognigyClient
-	url = https://github.com/Cognigy/CognigyClient.git
