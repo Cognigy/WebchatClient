@@ -4,26 +4,27 @@ export interface IPersistentMenuItem {
 }
 
 export interface IWebchatSettings {
+    backgroundImageUrl: string;
     colorScheme: string;
     designTemplate: number;
-    inputPlaceholder: string;
+    enableFileUpload: boolean;
+    enablePersistentMenu: boolean;
     enableSTT: boolean;
     enableTTS: boolean;
-    enableFileUpload: boolean;
-    startBehavior: "none" | "button" | "injection";
+    enableTypingIndicator: boolean;
     getStartedButtonText: string;
     getStartedPayload: string;
     getStartedText: string;
     headerLogoUrl: string;
-    messageLogoUrl: string;
-    backgroundImageUrl: string;
-    enableTypingIndicator: boolean;
+    inputPlaceholder: string;
     messageDelay: number;
+    messageLogoUrl: string;
     persistentMenu: {
         title: string;
         menuItems: IPersistentMenuItem[];
     };
-    enablePersistentMenu: boolean;
+    startBehavior: "none" | "button" | "injection";
+    STTLanguage: string;
     title: string;
 }
 
