@@ -4,6 +4,7 @@ export interface IPersistentMenuItem {
 }
 
 export interface IWebchatSettings {
+    disableToggleButton: boolean;
     backgroundImageUrl: string;
     colorScheme: string;
     designTemplate: number;
