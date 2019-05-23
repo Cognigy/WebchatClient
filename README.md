@@ -56,7 +56,6 @@ const client = new WebchatClient('https://webchat.config.url', {
 
 | Name | Type | Default | Description '
 | - | - | - | - |
-
 | `channel` | string | `"webchat-client"` | the name of the channel (can be used for analytics purposes)
 
 
