@@ -1,6 +1,7 @@
 import { SocketClient } from '@cognigy/socket-client';
 import { Options } from '@cognigy/socket-client/lib/interfaces/options';
 import { IWebchatConfig } from './interfaces/webchat-config';
+import { shouldForceWebsockets } from './helper/compatibility';
 
 export { Options }
 
@@ -8,8 +9,11 @@ export class WebchatClient extends SocketClient {
     public webchatConfig: IWebchatConfig;
 
     private static createDefaultWebchatOptions(): Partial<Options> {
+        const forceWebsockets = shouldForceWebsockets();
+
         return {
-            channel: 'webchat-client'
+            channel: 'webchat-client',
+            forceWebsockets
         }
     }
 
