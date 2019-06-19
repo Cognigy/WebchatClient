@@ -57,6 +57,7 @@ const client = new WebchatClient('https://webchat.config.url', {
 | Name | Type | Default | Description '
 | - | - | - | - |
 | `channel` | string | `"webchat-client"` | the name of the channel (can be used for analytics purposes)
+| `forceWebsockets` | boolean | `true` on IE and Safari, otherwise `false` | if this is enabled, there will be no fallback to http polling
 
 
 You can read about the rest of the options you can pass in the [SocketClient repository](https://github.com/Cognigy/SocketClient#socket-events).
