@@ -42,11 +42,11 @@ export class WebchatClient extends SocketClient {
 
     
     constructor(webchatConfigUrl: string, options: Partial<Options> = {}) {
-        const baseUrl = WebchatClient.getEndpointBaseUrl(webchatConfigUrl);
-        const token = WebchatClient.getEndpointUrlToken(webchatConfigUrl);
-        const webchatOptions = WebchatClient.createWebchatOptions(options);
-
-        super(baseUrl, token, webchatOptions);
+        super(
+            WebchatClient.getEndpointBaseUrl(webchatConfigUrl), 
+            WebchatClient.getEndpointUrlToken(webchatConfigUrl), 
+            WebchatClient.createWebchatOptions(options)
+        );
     }
 
     get webchatConfigUrl(): string {
@@ -54,10 +54,16 @@ export class WebchatClient extends SocketClient {
         return `${this.socketUrl}/${this.socketURLToken}`;
     }
 
-    async connect() {
+    loadWebchatConfig = async () => {
+        if (this.webchatConfig)
+            return;
+            
         const config = await WebchatClient.fetchWebchatConfig(this.webchatConfigUrl);
         this.webchatConfig = config;
+    }
 
+    async connect() {
+        await this.loadWebchatConfig();
         return super.connect();
     }
 }
