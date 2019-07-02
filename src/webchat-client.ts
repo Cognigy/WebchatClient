@@ -2,11 +2,13 @@ import { SocketClient } from '@cognigy/socket-client';
 import { Options } from '@cognigy/socket-client/lib/interfaces/options';
 import { IWebchatConfig } from './interfaces/webchat-config';
 import { shouldForceWebsockets } from './helper/compatibility';
+import { EventEmitter } from 'events';
 
 export { Options }
 
 export class WebchatClient extends SocketClient {
     public webchatConfig: IWebchatConfig;
+    private analytics = new EventEmitter();
 
     private static createDefaultWebchatOptions(): Partial<Options> {
         const forceWebsockets = shouldForceWebsockets();
@@ -65,5 +67,16 @@ export class WebchatClient extends SocketClient {
     async connect() {
         await this.loadWebchatConfig();
         return super.connect();
+    }
+
+    emitAnalytics(type: string, payload?: any) {
+        this.analytics.emit('analytics-event', {
+            type,
+            payload
+        });
+    }
+
+    registerAnalyticsService(handler: (event: { type: string; payload?: any; }) => void) {
+        this.analytics.on('analytics-event', handler);
     }
 }
