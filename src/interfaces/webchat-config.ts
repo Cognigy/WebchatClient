@@ -13,6 +13,7 @@ export interface IWebchatSettings {
     enableSTT: boolean;
     enableTTS: boolean;
     enableTypingIndicator: boolean;
+    enableConnectionStatusIndicator: boolean;
     getStartedButtonText: string;
     getStartedPayload: string;
     getStartedText: string;
