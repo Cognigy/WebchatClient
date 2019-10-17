@@ -10,7 +10,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@cognigy/socket-client": "^4.1.0",
+    "@cognigy/socket-client": "^4.1.1",
     "detect-browser": "^4.5.1"
   },
   "devDependencies": {
