@@ -1,3 +1,5 @@
+# 🚨 Deprecation Notice: This Repository is Inactive and no longer maintained 🚨
+
 # Cognigy Webchat Client
 
 This package is used to create a connection to Cognigy.AI via a Webchat Endpoint.  
